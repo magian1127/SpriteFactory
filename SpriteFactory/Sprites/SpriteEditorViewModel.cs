@@ -81,7 +81,7 @@ namespace SpriteFactory.Sprites
         {
             var animation = SelectedAnimation;
             var frame = animation?.SelectedKeyFrame;
-            
+
             if (frame != null)
             {
                 var index = animation.KeyFrames.IndexOf(frame);
@@ -114,7 +114,7 @@ namespace SpriteFactory.Sprites
             var index = Animations.IndexOf(selectedAnimation);
             var newIndex = index + increment;
 
-            if(newIndex < 0 || newIndex >= Animations.Count)
+            if (newIndex < 0 || newIndex >= Animations.Count)
                 return;
 
             Animations.RemoveAt(index);
@@ -196,7 +196,7 @@ namespace SpriteFactory.Sprites
                 }
             }
         }
-        
+
         private string _textureName;
         public string TextureName
         {
@@ -212,13 +212,33 @@ namespace SpriteFactory.Sprites
             {
                 if (SetPropertyValue(ref _texture, value, nameof(Texture)))
                 {
-                    if(_texture != null)
+                    if (_texture != null)
                         Camera.LookAt(_texture.Bounds.Center.ToVector2());
                 }
             }
         }
-        
+
         public ICommand SelectTextureCommand { get; }
+
+        private int wFrames;
+        public int WFrames
+        {
+            get => wFrames; set
+            {
+                TileWidth = Texture.Width / value;
+                wFrames = value;
+            }
+        }
+
+        private int hFrames;
+        public int HFrames
+        {
+            get => hFrames; set
+            {
+                TileHeight = Texture.Height / value;
+                hFrames = value;
+            }
+        }
 
         private int _tileWidth = 32;
         public int TileWidth
@@ -278,7 +298,7 @@ namespace SpriteFactory.Sprites
         public ICommand MoveFrameRightCommand { get; }
         public ICommand DuplicateFrameCommand { get; }
         public ICommand DeleteFrameCommand { get; }
-        
+
         private void AddSelectedKeyFrames()
         {
             if (SelectedAnimation != null && SelectedKeyFrames.Any())
@@ -290,7 +310,7 @@ namespace SpriteFactory.Sprites
 
         private void AddAnimation()
         {
-            var animation = new KeyFrameAnimationViewModel {Name = $"animation{Animations.Count}"};
+            var animation = new KeyFrameAnimationViewModel { Name = $"animation{Animations.Count}" };
             Animations.Add(animation);
             SelectedAnimation = animation;
             AddSelectedKeyFrames();
@@ -316,7 +336,7 @@ namespace SpriteFactory.Sprites
         }
 
         private Vector2 _previousMousePosition;
-        
+
         public override void OnMouseDown(MouseStateArgs mouseState)
         {
             if (mouseState.LeftButton == ButtonState.Pressed)
@@ -361,7 +381,7 @@ namespace SpriteFactory.Sprites
             if (rectangle.Right > TextureBounds.Right)
                 return Rectangle.Empty;
 
-            if(rectangle.Bottom > TextureBounds.Bottom)
+            if (rectangle.Bottom > TextureBounds.Bottom)
                 return Rectangle.Empty;
 
             return rectangle;
@@ -370,7 +390,7 @@ namespace SpriteFactory.Sprites
         public override void OnMouseMove(MouseStateArgs mouseState)
         {
             WorldPosition = Camera.ScreenToWorld(mouseState.Position);
-            
+
             var previousWorldPosition = Camera.ScreenToWorld(_previousMousePosition);
             var mouseDelta = previousWorldPosition - WorldPosition;
 
@@ -393,29 +413,29 @@ namespace SpriteFactory.Sprites
 
         private int _frameIndex;
         private float _nextFrameHackCounter;
-        
+
         private Rectangle GetPreviewRectangle()
         {
-            if(TileWidth == 0 || TileHeight == 0)
+            if (TileWidth == 0 || TileHeight == 0)
                 return Rectangle.Empty;
 
             const int max = 256;
             var previewZoom = SelectedPreviewZoom.Value;
             var width = TileWidth * previewZoom;
             var height = TileHeight * previewZoom;
-            var ratio = TileWidth / (float) TileHeight;
+            var ratio = TileWidth / (float)TileHeight;
 
             if (width > max || height > max)
             {
                 if (ratio >= 1f)
                 {
                     width = max;
-                    height = (int) (max / ratio);
+                    height = (int)(max / ratio);
                 }
                 else if (height > max)
                 {
                     height = max;
-                    width = (int) (max * ratio);
+                    width = (int)(max * ratio);
                 }
             }
 
@@ -461,7 +481,7 @@ namespace SpriteFactory.Sprites
 
             return SelectedAnimation.SelectedKeyFrame;
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             if (IsPlaying && SelectedAnimation?.KeyFrames.Count > 0)

@@ -141,7 +141,12 @@
                 <Button DockPanel.Dock="Right" Content="..." ToolTip="Select Texture..." Command="{Binding SelectTextureCommand}" MinWidth="32" />
                 <TextBox Text="{Binding TextureName, Mode=OneWay}" IsReadOnly="True" />
             </DockPanel>
-
+            <Label Content="Frames Num" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox Text="{Binding WFrames, UpdateSourceTrigger=PropertyChanged}" MinWidth="50" />
+                <Label Content="x" />
+                <TextBox Text="{Binding HFrames, UpdateSourceTrigger=PropertyChanged}" MinWidth="50" />
+            </StackPanel>
             <Label Content="Tile Size" />
             <StackPanel Orientation="Horizontal">
                 <TextBox Text="{Binding TileWidth, UpdateSourceTrigger=PropertyChanged}" MinWidth="50" />
